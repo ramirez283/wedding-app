@@ -1,124 +1,134 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import invitacionImg from '../assets/invitations/invitacion.png'
+import React from 'react'
 
-const examples = [
-  {
-    id: '1',
-    couple: 'María & Juan',
-    date: '15 Jun 2025',
-    theme: 'elegant',
-    label: 'Elegante clásico',
-    colors: 'from-amber-50 to-yellow-100',
-    accent: 'text-amber-700',
-    badge: 'bg-amber-100 text-amber-700',
-    emoji: '👑',
-  },
-  {
-    id: '2',
-    couple: 'Sofía & Carlos',
-    date: '22 Aug 2025',
-    theme: 'minimal',
-    label: 'Minimalista',
-    colors: 'from-gray-50 to-slate-100',
-    accent: 'text-slate-700',
-    badge: 'bg-slate-100 text-slate-700',
-    emoji: '◆',
-  },
-  {
-    id: '3',
-    couple: 'Valeria & Diego',
-    date: '5 Oct 2025',
-    theme: 'bohemian',
-    label: 'Bohemio',
-    colors: 'from-orange-50 to-amber-100',
-    accent: 'text-orange-700',
-    badge: 'bg-orange-100 text-orange-700',
-    emoji: '🌿',
-  },
-  {
-    id: '4',
-    couple: 'Isabella & Mateo',
-    date: '14 Feb 2026',
-    theme: 'floral',
-    label: 'Floral',
-    colors: 'from-pink-50 to-rose-100',
-    accent: 'text-pink-700',
-    badge: 'bg-pink-100 text-pink-700',
-    emoji: '🌸',
-  },
-  {
-    id: '5',
-    couple: 'Camila & Andrés',
-    date: '1 May 2026',
-    theme: 'playful',
-    label: 'Colorido',
-    colors: 'from-violet-50 to-purple-100',
-    accent: 'text-violet-700',
-    badge: 'bg-violet-100 text-violet-700',
-    emoji: '🎉',
-  },
-]
+function CornerFlourish({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const transforms: Record<string, string> = { tl: 'none', tr: 'scaleX(-1)', bl: 'scaleY(-1)', br: 'scale(-1,-1)' }
+  const corners: Record<string, React.CSSProperties> = { tl: { top: 16, left: 16 }, tr: { top: 16, right: 16 }, bl: { bottom: 16, left: 16 }, br: { bottom: 16, right: 16 } }
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none"
+      style={{ position: 'absolute', opacity: 0.18, transform: transforms[position], ...corners[position] }}>
+      <path d="M4 4 L4 28 Q4 4 28 4 Z" stroke="#213F99" strokeWidth="1" fill="none" />
+      <path d="M4 4 C4 4 20 4 28 12 C36 20 36 36 36 36" stroke="#9F7A33" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+      <path d="M14 4 C14 4 14 14 4 14" stroke="#213F99" strokeWidth="0.7" fill="none" strokeLinecap="round"/>
+      <circle cx="36" cy="36" r="2" fill="#9F7A33" opacity="0.7"/>
+      <circle cx="28" cy="12" r="1.2" fill="#213F99" opacity="0.6"/>
+    </svg>
+  )
+}
 
 export default function ExamplesShowcase() {
   return (
-    <section id="ejemplos" className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
+    <section
+      id="ejemplos"
+      className="py-24"
+      style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', position: 'relative', overflow: 'hidden' }}
+    >
+      <CornerFlourish position="tl" />
+      <CornerFlourish position="tr" />
+      <CornerFlourish position="bl" />
+      <CornerFlourish position="br" />
+
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
+
+        {/* Encabezado */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          style={{ textAlign: 'center', marginBottom: '48px' }}
         >
-          <span className="text-sm font-semibold tracking-widest uppercase" style={{ color: '#9F7A33' }}>
-            Explora estilos
+          <span style={{ color: '#9F7A33', fontSize: '12px', fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', fontFamily: 'Lato, sans-serif' }}>
+            ✦ Explora estilos ✦
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-3">
-            Ejemplos de invitaciones
+          <h2 style={{ color: '#213F99', marginTop: '12px', fontSize: 'clamp(32px, 5vw, 48px)', fontFamily: "'Playfair Display', serif" }}>
+            Ejemplo de invitación
           </h2>
-          <p className="text-gray-500 text-lg mt-4 max-w-xl mx-auto">
-            5 temas únicos para que encuentres el que refleja la personalidad de su boda.
+          <p style={{ fontSize: '17px', marginTop: '12px', color: '#666', maxWidth: '460px', margin: '12px auto 0', fontFamily: 'Lato, sans-serif', fontWeight: 300 }}>
+            Así luce una invitación digital creada con My Invitia.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {examples.map((ex, i) => (
-            <motion.div
-              key={ex.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+
+        {/* Mockup de celular centrado */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '36px' }}
+        >
+          {/* Phone frame */}
+          <div style={{
+            width: '280px',
+            borderRadius: '44px',
+            padding: '12px',
+            background: 'linear-gradient(145deg, #2a2a2a 0%, #111111 100%)',
+            boxShadow: [
+              '0 40px 80px rgba(0,0,0,0.35)',
+              '0 16px 32px rgba(0,0,0,0.2)',
+              'inset 0 1px 0 rgba(255,255,255,0.12)',
+              'inset 0 -1px 0 rgba(0,0,0,0.5)',
+            ].join(', '),
+            position: 'relative',
+          }}>
+            <div style={{ position: 'absolute', left: '-3px', top: '80px',  width: '3px', height: '32px', borderRadius: '2px 0 0 2px', background: '#1a1a1a' }} />
+            <div style={{ position: 'absolute', left: '-3px', top: '124px', width: '3px', height: '56px', borderRadius: '2px 0 0 2px', background: '#1a1a1a' }} />
+            <div style={{ position: 'absolute', right: '-3px', top: '100px', width: '3px', height: '64px', borderRadius: '0 2px 2px 0', background: '#1a1a1a' }} />
+
+            <div style={{ borderRadius: '34px', overflow: 'hidden', position: 'relative', backgroundColor: '#000' }}>
+              <div style={{
+                position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)',
+                width: '80px', height: '24px', background: '#111', borderRadius: '12px', zIndex: 10,
+              }} />
+              <img src={invitacionImg} alt="Ejemplo de invitación" style={{ width: '100%', display: 'block', objectFit: 'cover' }} draggable={false} />
+            </div>
+          </div>
+
+          {/* Info + botón */}
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '2.5px', color: '#9F7A33', textTransform: 'uppercase', marginBottom: '10px', fontFamily: 'Lato, sans-serif' }}>
+              ✦ Estilo elegante ✦
+            </p>
+            <h3 style={{ fontSize: '26px', fontWeight: 600, color: '#213F99', marginBottom: '6px', fontFamily: "'Playfair Display', serif" }}>
+              Isabella & Alejandro
+            </h3>
+            <p style={{ fontSize: '14px', color: '#888', marginBottom: '32px', fontFamily: 'Lato, sans-serif', fontWeight: 300 }}>
+              Sábado, 14 de septiembre de 2024
+            </p>
+
+            <Link
+              to="/invitation/1"
+              style={{
+                display: 'inline-block',
+                padding: '14px 44px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #9F7A33 0%, #C49A3C 100%)',
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: '15px',
+                textDecoration: 'none',
+                letterSpacing: '0.5px',
+                fontFamily: 'Lato, sans-serif',
+                boxShadow: '0 6px 24px rgba(159,122,51,0.3)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
+                ;(e.currentTarget as HTMLElement).style.boxShadow = '0 10px 32px rgba(159,122,51,0.45)'
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.transform = 'scale(1)'
+                ;(e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(159,122,51,0.3)'
+              }}
             >
-              <Link
-                to={`/invitation/${ex.id}`}
-                className={`block bg-gradient-to-br ${ex.colors} rounded-3xl p-8 hover:scale-105 hover:shadow-xl transition-all duration-300 group`}
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <span className="text-4xl">{ex.emoji}</span>
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${ex.badge}`}>
-                    {ex.label}
-                  </span>
-                </div>
+              Ver invitación completa
+            </Link>
+          </div>
+        </motion.div>
 
-                <div className="mb-4">
-                  <h3 className={`text-2xl font-bold ${ex.accent} mb-1`}>
-                    {ex.couple}
-                  </h3>
-                  <p className="text-gray-500 text-sm flex items-center gap-1">
-                    <span>📅</span> {ex.date}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 mt-6">
-                  <span className={`text-sm font-semibold ${ex.accent} group-hover:underline`}>
-                    Ver invitación →
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   )

@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Features from '../components/Features'
 import ExamplesShowcase from '../components/ExamplesShowcase'
+import GoldenDivider from '../components/GoldenDivider'
 
 export default function Landing() {
   return (
@@ -10,20 +11,63 @@ export default function Landing() {
       <Navbar />
       <main>
         <Hero />
+
+        {/* Hero → HowItWorks */}
+        <div style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', padding: '32px 0' }}>
+          <GoldenDivider />
+        </div>
+
         <HowItWorks />
+
+        {/* HowItWorks → Features */}
+        <div style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', padding: '32px 0' }}>
+          <GoldenDivider />
+        </div>
+
         <Features />
+
+        {/* Features → ExamplesShowcase */}
+        <div style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', padding: '32px 0' }}>
+          <GoldenDivider />
+        </div>
+
         <ExamplesShowcase />
 
-        <footer className="py-12 text-center" style={{ backgroundColor: '#213F99' }}>
-          <p className="text-2xl font-bold text-white mb-2">
-            My<span style={{ color: '#9F7A33' }}>Invitia</span>
-          </p>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Invitaciones de boda digitales que enamoran
-          </p>
-          <p className="text-xs mt-6" style={{ color: 'rgba(255,255,255,0.35)' }}>
-            © 2025 My Invitia. Hecho con ❤️
-          </p>
+        <div style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', padding: '32px 0' }}>
+          <GoldenDivider />
+        </div>
+
+        <footer
+          className="text-center relative overflow-hidden"
+          style={{ background: 'linear-gradient(160deg, #060B1C 0%, #0C1440 100%)', paddingTop: '56px', paddingBottom: '48px' }}
+        >
+          {[...Array(20)].map((_, i) => (
+            <div key={i} style={{
+              position: 'absolute',
+              width: i % 4 === 0 ? '2px' : '1px',
+              height: i % 4 === 0 ? '2px' : '1px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255,255,255,0.7)',
+              top: `${(i * 41 + 13) % 100}%`,
+              left: `${(i * 67 + 9) % 100}%`,
+              opacity: 0.3 + (i % 3) * 0.2,
+            }} />
+          ))}
+
+          <div className="relative z-10" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            <p className="text-2xl font-bold" style={{ color: '#F5EDD5' }}>
+              My<span style={{ color: '#9F7A33' }}>Invitia</span>
+            </p>
+            <p className="text-sm" style={{ color: 'rgba(245,237,213,0.5)' }}>
+              Invitaciones digitales que enamoran
+            </p>
+            <div style={{ margin: '16px auto', maxWidth: '320px', width: '100%' }}>
+              <GoldenDivider dark />
+            </div>
+            <p className="text-xs" style={{ color: 'rgba(159,122,51,0.5)' }}>
+              © 2025 My Invitia · Hecho con ✦
+            </p>
+          </div>
         </footer>
       </main>
     </>

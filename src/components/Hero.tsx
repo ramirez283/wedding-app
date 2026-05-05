@@ -91,19 +91,19 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── Overlay ligero para legibilidad ── */}
+      {/* ── Overlay: arriba claro para el logo, abajo oscuro para el título ── */}
       <div
         className="absolute inset-0 z-10"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.50) 100%)',
+            'linear-gradient(to bottom, rgba(255,255,255,0.25) 0%, rgba(0,0,0,0.05) 45%, rgba(0,0,0,0.52) 100%)',
         }}
       />
 
       {/* ── Contenido: grid 1×3 vertical ── */}
       <div
         className="relative z-20 w-full flex-1 px-6"
-        style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', paddingTop: '40px', paddingBottom: '48px' }}
+        style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', paddingTop: '40px', paddingBottom: '120px' }}
       >
         {/* Fila 1 — Logo sobre placa flotante */}
         <motion.div
@@ -162,12 +162,12 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
           className="text-5xl md:text-7xl font-bold leading-tight text-center"
-          style={{ color: '#1a1a1a', textShadow: '0 2px 20px rgba(255,255,255,0.95)' }}
+          style={{ color: '#ffffff', textShadow: '0 2px 24px rgba(0,0,0,0.45), 0 1px 8px rgba(0,0,0,0.3)' }}
         >
           Crea momentos{' '}
           <span
             className="text-transparent bg-clip-text"
-            style={{ backgroundImage: 'linear-gradient(90deg, #213F99, #9F7A33)' }}
+            style={{ backgroundImage: 'linear-gradient(90deg, #E1B0AC, #9F7A33)' }}
           >
             inolvidables
           </span>
