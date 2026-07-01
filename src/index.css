@@ -7,7 +7,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior manejado por JS en cada componente para evitar conflictos con navegación SPA */
 }
 
 body {

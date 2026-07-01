@@ -83,13 +83,13 @@ export default function Features() {
                 transition: 'box-shadow 0.25s, transform 0.25s',
               }}
             >
-              {/* Círculo icono — solo contorno */}
+              {/* Círculo icono */}
               <div style={{
                 width: '58px', height: '58px', borderRadius: '50%',
                 border: '1.5px solid rgba(33,63,153,0.35)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '22px', marginBottom: '14px', flexShrink: 0,
-                backgroundColor: 'transparent',
+                backgroundColor: 'transparent', overflow: 'hidden',
               }}>
                 {feature.icon}
               </div>

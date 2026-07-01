@@ -100,7 +100,7 @@ export default function ExamplesShowcase() {
             </p>
 
             <Link
-              to="/invitation/1"
+              to="/invitation/isabella-y-alejandro"
               style={{
                 display: 'inline-block',
                 padding: '14px 44px',

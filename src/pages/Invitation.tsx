@@ -1,99 +1,13 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import fondoImg from '../assets/invitations/fondo-hoja.png'
-import coupleImg from '../assets/banner/b2.jpg'
+import backgroundImg from '../assets/invitations/background-hoja.png'
 import buhoImg from '../assets/invitations/buho-pergamino.png'
-import b4 from '../assets/banner/b4.jpg'
-import f1 from '../assets/invitations/f1.jpg'
-import f2 from '../assets/invitations/f2.jpg'
-import f3 from '../assets/invitations/f3.jpg'
-import f4 from '../assets/invitations/f4.jpg'
-import iglesiaImg from '../assets/invitations/iglesia.jpg'
-import salonImg from '../assets/invitations/salon.png'
+import dressCodeImg from '../assets/invitations/dresscode1.png'
+import lluviaSobresImg from '../assets/invitations/lluvia-sobres.svg'
+import invitations from '../data/invitations'
 
-const galleryPhotos = [f4, f2, f3, coupleImg, f1, b4]
-
-const WEDDING_DATE = new Date('2026-09-14T16:00:00')
-
-const LUGARES = [
-  {
-    tipo:      'Ceremonia',
-    emoji:     '⛪',
-    nombre:    'Parroquia San Francisco',
-    direccion: 'Av. Principal 456, Col. Centro',
-    ciudad:    'Ciudad de México, México',
-    hora:      '16:00 hrs',
-    mapsUrl:   'https://maps.google.com/?q=Parroquia+San+Francisco+Ciudad+de+Mexico',
-    imagen:    iglesiaImg,
-  },
-  {
-    tipo:      'Recepción',
-    emoji:     '🥂',
-    nombre:    'Salón Jardines del Lago',
-    direccion: 'Calle Reforma 789, Col. Jardines',
-    ciudad:    'Ciudad de México, México',
-    hora:      '19:00 hrs',
-    mapsUrl:   'https://maps.google.com/?q=Jardines+del+Lago+Ciudad+de+Mexico',
-    imagen:    salonImg,
-  },
-]
-
-const VESTIMENTA = {
-  codigo:      'Formal',
-  descripcion: 'Solicitamos a nuestros invitados asistir en vestimenta formal. Los caballeros con traje y las damas con vestido de gala o cocktail.',
-  evitar:      'Por favor evitar el color blanco y el negro.',
-  hombres:     '👔 Traje y corbata',
-  mujeres:     '👗 Vestido formal o de gala',
-}
-
-const HOSPEDAJE = [
-  {
-    nombre:    'Hotel Gran Plaza',
-    estrellas: '⭐⭐⭐⭐',
-    distancia: '5 min del salón',
-    precio:    'Desde $1,200 MXN / noche',
-    telefono:  '+52 55 1234 5678',
-    link:      'https://www.google.com',
-  },
-  {
-    nombre:    'Hotel Boutique Central',
-    estrellas: '⭐⭐⭐',
-    distancia: '10 min del salón',
-    precio:    'Desde $800 MXN / noche',
-    telefono:  '+52 55 8765 4321',
-    link:      'https://www.google.com',
-  },
-]
-
-const REGALOS = [
-  {
-    tienda:  'Amazon',
-    logo:    '📦',
-    color:   '#FF9900',
-    bgColor: '#FFF8EC',
-    link:    'https://www.amazon.com.mx',
-    texto:   'Ver lista en Amazon',
-  },
-  {
-    tienda:  'Liverpool',
-    logo:    '🛍️',
-    color:   '#C8102E',
-    bgColor: '#FFF0F2',
-    link:    'https://www.liverpool.com.mx',
-    texto:   'Ver lista en Liverpool',
-  },
-]
-
-const ITINERARIO = [
-  { hora: '15:30', icono: '🎊', titulo: 'Llegada de invitados',   descripcion: 'Bienvenida y acomodo en la iglesia' },
-  { hora: '16:00', icono: '💒', titulo: 'Ceremonia religiosa',    descripcion: 'Unión de Isabella y Alejandro' },
-  { hora: '17:30', icono: '📸', titulo: 'Sesión de fotos',        descripcion: 'Momentos que duran para siempre' },
-  { hora: '18:00', icono: '🥂', titulo: 'Cocktail',               descripcion: 'Brindis de bienvenida en el salón' },
-  { hora: '19:00', icono: '🍽️', titulo: 'Cena',                   descripcion: 'Disfruta del banquete con nosotros' },
-  { hora: '20:00', icono: '💃', titulo: 'Primer baile',           descripcion: 'El momento más esperado' },
-  { hora: '20:30', icono: '✨', titulo: 'Brindis',                descripcion: 'Palabras de los novios e invitados' },
-  { hora: '21:00', icono: '🎶', titulo: 'Fiesta',                 descripcion: '¡A bailar toda la noche!' },
-]
 
 function useCountdown(target: Date) {
   const calc = () => {
@@ -115,7 +29,7 @@ function useCountdown(target: Date) {
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-function MusicPlayer() {
+function MusicPlayer({ src }: { src: string }) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playing, setPlaying]   = useState(false)
   const [progress, setProgress] = useState(0)
@@ -157,7 +71,7 @@ function MusicPlayer() {
     }}>
       <audio
         ref={audioRef}
-        src="/music/Mi Corazón Encantado - Dragon Ball GT  Piano Tutorial 2024 (pollonuel).mp3"
+        src={src}
         onTimeUpdate={onTimeUpdate}
         onLoadedMetadata={e => { setDuration(e.currentTarget.duration); e.currentTarget.volume = 0.5 }}
         onEnded={() => { setPlaying(false); setProgress(0); setCurrentTime(0) }}
@@ -267,19 +181,40 @@ function CountdownBox({ value, label }: { value: string; label: string }) {
 }
 
 export default function Invitation() {
-  const { dias, horas, minutos, segundos } = useCountdown(WEDDING_DATE)
+  const { slug } = useParams<{ slug: string }>()
+  const data = invitations[slug ?? '']
+  const { dias, horas, minutos, segundos } = useCountdown(
+    data ? new Date(data.fechaContdown) : new Date()
+  )
+
+  if (!data) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundImage: `url(${fondoImg})`, backgroundSize: 'cover' }}>
+      <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '28px', color: '#213F99' }}>Invitación no encontrada</p>
+    </div>
+  )
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundImage: `url(${fondoImg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }}>
+    <>
+      {/* Fondo fijo — no se mueve ni escala */}
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 0,
+        backgroundImage: `url(${backgroundImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }} />
+
+      {/* Contenido scrolleable encima del fondo */}
+      <div style={{
+        position: 'relative',
+        zIndex: 1,
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
 
       {/* ── Foto de la pareja ── */}
       <motion.div
@@ -288,7 +223,7 @@ export default function Invitation() {
         transition={{ duration: 1.2 }}
         style={{ width: '100%', maxWidth: '480px', position: 'relative', overflow: 'hidden' }}
       >
-        <img src={coupleImg} alt="Isabella & Alejandro"
+        <img src={data.fotoPortada} alt={`${data.nombre1} & ${data.nombre2}`}
           style={{ width: '100%', display: 'block', objectFit: 'cover', maxHeight: '60vh' }}
           draggable={false}
         />
@@ -309,22 +244,22 @@ export default function Invitation() {
         <p style={{ color: '#9F7A33', fontSize: '20px', letterSpacing: '4px', marginBottom: '8px' }}>✦</p>
 
         <h1 style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(48px, 13vw, 72px)', color: '#213F99', lineHeight: 1.1, marginBottom: '0px' }}>
-          Isabella
+          {data.nombre1}
         </h1>
         <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(24px, 6vw, 36px)', color: '#9F7A33', margin: '0 0 0px', letterSpacing: '2px' }}>
           &amp;
         </p>
         <h1 style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(48px, 13vw, 72px)', color: '#213F99', lineHeight: 1.1, marginBottom: '24px' }}>
-          Alejandro
+          {data.nombre2}
         </h1>
 
         <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', maxWidth: '240px', margin: '0 auto 20px' }} />
 
         <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(20px, 5vw, 26px)', color: '#555', letterSpacing: '1px', marginBottom: '24px' }}>
-          Sábado, 14 de septiembre de 2026
+          {data.fecha}
         </p>
 
-        <MusicPlayer />
+        <MusicPlayer src={data.cancion} />
       </motion.div>
 
       {/* ── Countdown ── */}
@@ -367,7 +302,7 @@ export default function Invitation() {
         </div>
 
         <div className="columns-2 md:columns-3" style={{ gap: '10px' }}>
-          {galleryPhotos.map((src, i) => (
+          {data.galeria.map((src, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.96 }}
@@ -412,7 +347,7 @@ export default function Invitation() {
 
         {/* Cards de lugares */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {LUGARES.map((lugar, i) => (
+          {data.lugares.map((lugar, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -509,14 +444,14 @@ export default function Invitation() {
             background: 'linear-gradient(180deg, #9F7A33, #E1B0AC, #9F7A33)',
           }} />
 
-          {ITINERARIO.map((item, i) => (
+          {data.itinerario.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: -16 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: i < ITINERARIO.length - 1 ? '20px' : '0' }}
+              style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: i < data.itinerario.length - 1 ? '20px' : '0' }}
             >
               {/* Círculo con icono */}
               <div style={{
@@ -568,29 +503,167 @@ export default function Invitation() {
           <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginTop: '18px' }} />
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.75)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(159,122,51,0.2)', boxShadow: '0 4px 20px rgba(159,122,51,0.08)', textAlign: 'center' }}>
-          <p style={{ fontSize: '40px', marginBottom: '8px' }}>👔👗</p>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '22px', fontWeight: 600, color: '#213F99', marginBottom: '12px' }}>
-            {VESTIMENTA.codigo}
-          </p>
-          <p style={{ fontFamily: 'Lato, sans-serif', fontWeight: 300, fontSize: '14px', color: '#666', lineHeight: 1.7, marginBottom: '16px' }}>
-            {VESTIMENTA.descripcion}
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
-            {[VESTIMENTA.hombres, VESTIMENTA.mujeres].map(v => (
-              <span key={v} style={{ background: 'rgba(33,63,153,0.07)', border: '1px solid rgba(33,63,153,0.15)', borderRadius: '999px', padding: '6px 16px', fontFamily: 'Lato, sans-serif', fontSize: '13px', color: '#213F99', fontWeight: 600 }}>
+        {/* Sin contenedor blanco — diseño abierto y premium */}
+        <div style={{ textAlign: 'center' }}>
+
+          {/* Ilustración protagonista */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.1 }}
+            style={{ position: 'relative', display: 'inline-block' }}
+          >
+            {/* Halo dorado detrás */}
+            <div style={{
+              position: 'absolute', inset: '-16px',
+              borderRadius: '50%',
+              background: 'radial-gradient(ellipse at center, rgba(159,122,51,0.12) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+            <img
+              src={dressCodeImg}
+              alt="Código de vestimenta"
+              style={{
+                width: '300px',
+                height: 'auto',
+                display: 'block',
+                mixBlendMode: 'multiply',
+                filter: 'drop-shadow(0 8px 24px rgba(159,122,51,0.22)) drop-shadow(0 2px 6px rgba(33,63,153,0.10))',
+                position: 'relative',
+              }}
+            />
+          </motion.div>
+
+          {/* Nombre del código */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            style={{ marginTop: '20px' }}
+          >
+            <p style={{
+              fontFamily: "'Great Vibes', cursive",
+              fontSize: 'clamp(30px, 8vw, 40px)',
+              color: '#9F7A33',
+              letterSpacing: '1px',
+              marginBottom: '8px',
+              textShadow: '0 1px 8px rgba(159,122,51,0.25)',
+            }}>
+              {data.vestimenta.codigo}
+            </p>
+            <p style={{
+              fontFamily: 'Lato, sans-serif',
+              fontWeight: 300,
+              fontSize: '13px',
+              color: '#888',
+              letterSpacing: '0.3px',
+              marginBottom: '20px',
+            }}>
+              Vestimenta formal elegante para celebrar con nosotros este gran día.
+            </p>
+          </motion.div>
+
+          {/* Dos etiquetas */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '20px' }}
+          >
+            {[data.vestimenta.hombres, data.vestimenta.mujeres].map(v => (
+              <span key={v} style={{
+                border: '1px solid rgba(159,122,51,0.45)',
+                borderRadius: '999px',
+                padding: '7px 22px',
+                fontFamily: 'Lato, sans-serif',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '1.5px',
+                color: '#9F7A33',
+                textTransform: 'uppercase',
+              }}>
                 {v}
               </span>
             ))}
-          </div>
-          <p style={{ fontFamily: 'Lato, sans-serif', fontStyle: 'italic', fontSize: '13px', color: '#E1B0AC', fontWeight: 400 }}>
-            ✦ {VESTIMENTA.evitar} ✦
+          </motion.div>
+
+          {/* Nota discreta */}
+          <p style={{
+            fontFamily: 'Lato, sans-serif',
+            fontSize: '11px',
+            color: 'rgba(33,63,153,0.45)',
+            letterSpacing: '0.5px',
+          }}>
+            Evitar tonos blanco y negro.
           </p>
+
         </div>
       </motion.div>
 
+      {/* ── Solo adultos ── */}
+      {data.soloAdultos && (
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          style={{ width: '100%', maxWidth: '480px', padding: '0 24px 56px', textAlign: 'center' }}
+        >
+          <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginBottom: '28px' }} />
+
+          {/* Tarjetita */}
+          <div style={{
+            position: 'relative',
+            background: 'rgba(255,255,255,0.78)',
+            border: '1px solid rgba(159,122,51,0.25)',
+            borderRadius: '16px',
+            padding: '32px 28px 28px',
+            boxShadow: '0 4px 24px rgba(159,122,51,0.10)',
+          }}>
+            {/* Comillas decorativas arriba */}
+            <div style={{
+              position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)',
+              background: 'linear-gradient(135deg, #C49A3C, #9F7A33)',
+              borderRadius: '50%', width: '36px', height: '36px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 10px rgba(159,122,51,0.3)',
+              fontSize: '18px', color: '#fff', fontWeight: 900, lineHeight: 1,
+              fontFamily: 'Georgia, serif',
+            }}>
+              ❝
+            </div>
+
+            {/* Mensaje */}
+            <p style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: 'clamp(15px, 4vw, 17px)',
+              fontStyle: 'italic',
+              color: '#2a2a2a',
+              lineHeight: 1.85,
+              marginBottom: '20px',
+            }}>
+              Adoramos a tus pequeños, sin embargo, este evento está destinado solo para adultos. ¡Esperamos tu comprensión!
+            </p>
+
+            {/* Firma dorada */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(159,122,51,0.4))' }} />
+              <span style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, fontSize: '11px', letterSpacing: '2.5px', color: '#9F7A33', textTransform: 'uppercase' }}>
+                Solo adultos
+              </span>
+              <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(159,122,51,0.4), transparent)' }} />
+            </div>
+          </div>
+
+          <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginTop: '28px' }} />
+        </motion.div>
+      )}
+
       {/* ── Hospedaje ── */}
-      <motion.div
+      {data.hospedaje.length > 0 && <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -604,7 +677,7 @@ export default function Invitation() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {HOSPEDAJE.map((hotel, i) => (
+          {data.hospedaje.map((hotel, i) => (
             <motion.div key={i}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -629,7 +702,7 @@ export default function Invitation() {
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </motion.div>}
 
       {/* ── Mesa de regalos ── */}
       <motion.div
@@ -650,7 +723,7 @@ export default function Invitation() {
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {REGALOS.map((tienda, i) => (
+          {data.regalos.map((tienda, i) => (
             <motion.a
               key={i}
               href={tienda.link}
@@ -685,6 +758,142 @@ export default function Invitation() {
         </div>
       </motion.div>
 
+      {/* ── Lluvia de sobres ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        style={{ width: '100%', maxWidth: '480px', padding: '0 24px 80px', textAlign: 'center' }}
+      >
+        <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginBottom: '18px' }} />
+        <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(28px, 8vw, 38px)', color: '#213F99' }}>
+          Lluvia de sobres
+        </p>
+        <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginTop: '18px', marginBottom: '28px' }} />
+
+        <motion.img
+          src={lluviaSobresImg}
+          alt="Lluvia de sobres"
+          initial={{ opacity: 0, scale: 0.94 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, delay: 0.1 }}
+          style={{
+            width: '100%',
+            maxWidth: '260px',
+            height: 'auto',
+            display: 'block',
+            margin: '0 auto 24px',
+            filter: 'drop-shadow(0 6px 18px rgba(159,122,51,0.2))',
+          }}
+        />
+
+        <p style={{ fontFamily: 'Lato, sans-serif', fontWeight: 300, fontSize: '14px', color: '#666', lineHeight: 1.8, marginBottom: '20px', maxWidth: '340px', margin: '0 auto 20px' }}>
+          Tu presencia es el mejor regalo. Si deseas hacernos un obsequio en efectivo,
+          con mucho gusto lo recibiremos.
+        </p>
+
+        <p style={{ fontFamily: 'Lato, sans-serif', fontStyle: 'italic', fontSize: '12px', color: 'rgba(159,122,51,0.7)', letterSpacing: '0.5px' }}>
+          ✦ Gracias por tu generosidad y cariño ✦
+        </p>
+      </motion.div>
+
+      {/* ── Confirmar asistencia ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9 }}
+        style={{ width: '100%', maxWidth: '480px', padding: '0 24px 80px', textAlign: 'center' }}
+      >
+        {/* Divisor dorado */}
+        <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginBottom: '18px' }} />
+
+        {/* Ornamento floral */}
+        <div style={{ fontSize: '22px', color: '#C49A3C', marginBottom: '8px', letterSpacing: '8px' }}>✦ ❧ ✦</div>
+
+        <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(32px, 9vw, 44px)', color: '#213F99', lineHeight: 1.2, marginBottom: '4px' }}>
+          Confirma tu asistencia
+        </p>
+        <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(18px, 5vw, 24px)', color: '#9F7A33', marginBottom: '20px' }}>
+          antes del 1 de octubre de 2026
+        </p>
+
+        <div style={{ height: '1.5px', background: 'linear-gradient(90deg, transparent, #E1B0AC 20%, #9F7A33 50%, #E1B0AC 80%, transparent)', marginBottom: '28px' }} />
+
+        <p style={{ fontFamily: 'Lato, sans-serif', fontWeight: 300, fontSize: '14px', color: '#666', lineHeight: 1.8, maxWidth: '320px', margin: '0 auto 32px' }}>
+          Nos encantaría contar con tu presencia en este día tan especial. Confírmanos tu asistencia por cualquiera de estos medios.
+        </p>
+
+        {/* Botones */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '320px', margin: '0 auto' }}>
+
+          {/* WhatsApp */}
+          <motion.a
+            href="https://wa.me/523141613998?text=Hola%2C%20confirmo%20mi%20asistencia%20a%20su%20boda%20%F0%9F%92%8D"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03, boxShadow: '0 8px 28px rgba(37,211,102,0.35)' }}
+            whileTap={{ scale: 0.97 }}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
+              padding: '16px 24px', borderRadius: '999px', textDecoration: 'none',
+              background: 'linear-gradient(135deg, #25D366, #1da851)',
+              boxShadow: '0 4px 18px rgba(37,211,102,0.28)',
+            }}
+          >
+            {/* WhatsApp icon */}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, fontSize: '15px', color: '#fff', letterSpacing: '0.5px' }}>
+              Confirmar por WhatsApp
+            </span>
+          </motion.a>
+
+          {/* Llamada */}
+          <motion.a
+            href="tel:3141613998"
+            whileHover={{ scale: 1.03, boxShadow: '0 8px 28px rgba(33,63,153,0.25)' }}
+            whileTap={{ scale: 0.97 }}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
+              padding: '16px 24px', borderRadius: '999px', textDecoration: 'none',
+              background: 'linear-gradient(135deg, #213F99, #2d56cc)',
+              boxShadow: '0 4px 18px rgba(33,63,153,0.22)',
+            }}
+          >
+            {/* Phone icon */}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+            <span style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, fontSize: '15px', color: '#fff', letterSpacing: '0.5px' }}>
+              Llamar al 314 161 3998
+            </span>
+          </motion.a>
+        </div>
+
+        {/* Nota final */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          style={{ marginTop: '36px' }}
+        >
+          <div style={{ fontSize: '20px', color: '#C49A3C', letterSpacing: '6px', marginBottom: '12px' }}>✦ ✦ ✦</div>
+          <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(22px, 6vw, 30px)', color: '#9F7A33' }}>
+            ¡Los esperamos con mucho amor!
+          </p>
+          <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(28px, 8vw, 38px)', color: '#213F99', marginTop: '4px' }}>
+            {data.nombre1} &amp; {data.nombre2}
+          </p>
+        </motion.div>
+
+      </motion.div>
+
     </div>
+    </>
   )
 }

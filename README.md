@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+ngrok http 5173
