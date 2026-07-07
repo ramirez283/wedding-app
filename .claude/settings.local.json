@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(cp \"d:/Aplicacion/wedding-app/src/assets/invitations/mini-icon.png\" \"d:/Aplicacion/wedding-app/public/favicon.png\")"
+    ],
+    "additionalDirectories": [
+      "d:\\Aplicacion\\wedding-app\\src\\assets\\invitations"
     ]
   }
 }

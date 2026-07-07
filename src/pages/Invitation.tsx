@@ -597,7 +597,7 @@ export default function Invitation() {
             color: 'rgba(33,63,153,0.45)',
             letterSpacing: '0.5px',
           }}>
-            Evitar tonos blanco y negro.
+            {/* Evitar tonos blanco y negro. */}
           </p>
 
         </div>
