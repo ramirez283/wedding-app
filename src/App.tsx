@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useLayoutEffect } from 'react'
 import Landing from './pages/Landing'
 import Invitation from './pages/Invitation'
+import AvisoPrivacidad from './pages/AvisoPrivacidad'
+import Terminos from './pages/Terminos'
 
 // Evita que el navegador restaure el scroll al navegar en SPA
 if ('scrollRestoration' in history) {
@@ -27,6 +29,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/invitation/:slug" element={<Invitation />} />
+        <Route path="/aviso-privacidad" element={<AvisoPrivacidad />} />
+        <Route path="/terminos" element={<Terminos />} />
       </Routes>
     </BrowserRouter>
   )

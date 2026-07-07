@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Features from '../components/Features'
 import ExamplesShowcase from '../components/ExamplesShowcase'
+import Pricing from '../components/Pricing'
 import GoldenDivider from '../components/GoldenDivider'
 
 export default function Landing() {
@@ -37,6 +39,12 @@ export default function Landing() {
           <GoldenDivider />
         </div>
 
+        <Pricing />
+
+        <div style={{ background: 'linear-gradient(90deg, #F2D4D6 0%, #FBF0DC 50%, #F2D4D6 100%)', padding: '32px 0' }}>
+          <GoldenDivider />
+        </div>
+
         <footer
           className="text-center relative overflow-hidden"
           style={{ background: 'linear-gradient(160deg, #060B1C 0%, #0C1440 100%)', paddingTop: '56px', paddingBottom: '48px' }}
@@ -64,8 +72,19 @@ export default function Landing() {
             <div style={{ margin: '16px auto', maxWidth: '320px', width: '100%' }}>
               <GoldenDivider dark />
             </div>
-            <p className="text-xs" style={{ color: 'rgba(159,122,51,0.5)' }}>
-              © 2025 My Invitia · Hecho con ✦
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+              <Link to="/aviso-privacidad" style={{ color: 'rgba(245,237,213,0.4)', fontSize: '12px', textDecoration: 'none' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(196,154,60,0.8)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,237,213,0.4)')}
+              >Aviso de Privacidad</Link>
+              <span style={{ color: 'rgba(196,154,60,0.25)', fontSize: '12px' }}>·</span>
+              <Link to="/terminos" style={{ color: 'rgba(245,237,213,0.4)', fontSize: '12px', textDecoration: 'none' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(196,154,60,0.8)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,237,213,0.4)')}
+              >Términos y Condiciones</Link>
+            </div>
+            <p className="text-xs" style={{ color: 'rgba(159,122,51,0.4)' }}>
+              © 2026 My Invitia · Hecho con ✦
             </p>
           </div>
         </footer>
